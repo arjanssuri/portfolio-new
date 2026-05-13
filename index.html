@@ -116,14 +116,43 @@
   ];
   document.getElementById("status").textContent = states[Math.floor(Math.random() * states.length)];
 
-  console.log("%c hey.", "font: bold 16px Georgia; color: #000;");
-  console.log("%c you found the console. take a riddle:", "font: 13px Georgia; color: #555;");
+  const title = "font: bold 16px Georgia; color: #000;";
+  const body  = "font: 13px Georgia; color: #555;";
+  const riddle = "font: italic 13px Georgia; color: #333;";
+
+  console.log("%c hey.", title);
+  console.log("%c you found the console. pick a riddle:", body);
   console.log(" ");
-  console.log("%c   above lives a continent that burns.", "font: italic 13px Georgia; color: #333;");
-  console.log("%c   its frozen sibling, seat of house stark,", "font: italic 13px Georgia; color: #333;");
-  console.log("%c   is where i hide.", "font: italic 13px Georgia; color: #333;");
+  console.log("%c   1. gossip girl", body);
+  console.log("%c   2. brooklyn nine-nine", body);
+  console.log("%c   3. kim's convenience", body);
+  console.log("%c   4. suits", body);
   console.log(" ");
-  console.log("%c   lowercase. add .html. go.", "font: 13px Georgia; color: #555;");
+  console.log("%c type pick(1), pick(2), pick(3), or pick(4).", body);
+
+  window.pick = function (n) {
+    console.log(" ");
+    if (n === 1) {
+      console.log("%c spotted: you, lurking in the console.", riddle);
+      console.log("%c two queens ruled the upper east side.", riddle);
+      console.log("%c their initials, joined by an ampersand.", riddle);
+      console.log("%c lowercase. .html. xoxo.", body);
+    } else if (n === 2) {
+      console.log("%c noice. cool cool cool.", riddle);
+      console.log("%c the squad's stoic captain.", riddle);
+      console.log("%c his surname. one word. lowercase. .html.", body);
+    } else if (n === 3) {
+      console.log("%c okay, see you.", riddle);
+      console.log("%c the kims' son left the store to rent cars.", riddle);
+      console.log("%c his name. one word. lowercase. .html.", body);
+    } else if (n === 4) {
+      console.log("%c that's the difference between you and me.", riddle);
+      console.log("%c new york's best closer. his surname.", riddle);
+      console.log("%c one word. lowercase. .html.", body);
+    } else {
+      console.log("%c pick(1), pick(2), pick(3), or pick(4).", body);
+    }
+  };
 </script>
 
 </div>
