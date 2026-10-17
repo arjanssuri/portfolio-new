@@ -1,0 +1,15 @@
+{
+  "routes": [
+    {
+      "src": "/",
+      "has": [{ "type": "host", "value": "blog.arjansuri.com" }],
+      "dest": "/blog/index.html"
+    },
+    { "handle": "filesystem" },
+    {
+      "src": "/(.*)",
+      "has": [{ "type": "host", "value": "blog.arjansuri.com" }],
+      "dest": "/blog/$1"
+    }
+  ]
+}

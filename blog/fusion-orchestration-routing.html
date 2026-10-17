@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fusion, orchestration, and routing: killing frontier models · arjan suri</title>
+<meta name="description" content="Routing, fusion, and orchestration systems now combine existing models to match the best monolithic models, often at half the cost. The model is no longer the moat.">
+<meta property="og:title" content="fusion, orchestration, and routing: killing frontier models">
+<meta property="og:description" content="The model is no longer the moat. The value has moved up a layer.">
+<meta property="og:image" content="img/fusion-orchestration-routing/header.png">
+<link rel="icon" href="avatar.jpg">
+<link rel="stylesheet" href="blog.css">
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<main class="page">
+
+<header class="masthead">
+  <a class="home" href="https://arjansuri.com/"><img src="avatar.jpg" alt=""><span>arjan suri</span></a>
+  <a class="back" href="./">&larr; writing</a>
+</header>
+
+<header class="post-head">
+  <h1><a class="title-link" href="https://x.com/arjanssuri/status/2069108737613148353">fusion, orchestration, and routing: killing frontier models</a></h1>
+  <p class="byline">arjan suri, rishik kolpekwar<br>june 22, 2026 · <span id="read-time">8 min read</span> · <a href="https://x.com/arjanssuri/status/2069108737613148353">originally on x &#8599;</a></p>
+</header>
+
+<figure class="hero">
+  <img src="img/fusion-orchestration-routing/header.png" width="1200" height="480" alt="Fusion, orchestration and routing: the new value layer killing single frontier models. Routing: one classifier picks one model. Fusion: a panel blends into one answer. Orchestration: a conductor runs a team, with recursion.">
+</figure>
+
+<article class="prose">
+
+<blockquote>
+  <p>"If you're a model company, you may have a winner's curse." (Frontier models, he argued, are "one copy away from commoditization." The value accrues to the <i>orchestration and scaffolding layer</i>, <b>not</b> the model.)</p>
+  <cite>— Satya Nadella, CEO of Microsoft (2026)</cite>
+</blockquote>
+
+<h2>tl;dr</h2>
+<p>For three years the race was simple: build one model that beats every benchmark. Bigger training runs, longer context, higher scores. The winner would own the market because the model was the moat.</p>
+<p>That race is quietly ending. Not because models stopped improving, but because a new layer has learned to deliver frontier-level performance without a single frontier model doing the work alone.</p>
+<p>Routing, fusion, and orchestration systems now combine existing models intelligently enough to match the best monolithic models, often at half the cost. In doing so they reduce the standalone value of both the giant general model and the narrow specialist, and open a new axis of progress built on coordination instead of scale.</p>
+
+<h2>the old paradigm</h2>
+<p>The old strategy came in two flavors. One was the monolithic general model: a single enormous system trained to be good at everything, from poetry to proofs. Think OpenAI's GPT, Anthropic's Claude, Google's Gemini, Moonshot's Kimi, Alibaba's Qwen. The other was the narrow specialist: a model or product tuned to dominate one domain. Think Harvey in law, Cursor's Composer in code, Sierra in customer service, Glean in enterprise search.</p>
+<p>Both worked for a while. General models gave you one API and broad competence. Specialists gave you depth where it mattered. But both hit the same walls.</p>
+<p>General models are expensive to run on every request, even trivial ones, and they carry blind spots no amount of scale fully erases. Specialists are brittle, strong in their lane and useless outside it, and maintaining a fleet of them is its own burden. Worst of all, each approach is a single point of failure: one vendor, one set of weights, one way of being wrong.</p>
+<p><b>Takeaway:</b> betting everything on one model, general or specialized, means inheriting all of its limits at once.</p>
+
+<h2>the new systems</h2>
+<p>The alternative is to stop treating the model as the product and start treating the combination as the product. Three approaches lead the way.</p>
+
+<h3>routing</h3>
+<p>Routing is a smart dispatcher that picks the best model for each prompt. Instead of sending everything to your most expensive model, a fast classifier judges difficulty first, then sends the request where it belongs.</p>
+
+<figure class="reveal">
+  <a href="img/fusion-orchestration-routing/routing.png"><img src="img/fusion-orchestration-routing/routing.png" width="1200" height="628" loading="lazy" alt="Routing diagram: a prompt goes to a difficulty classifier, which sends easy prompts to a cheap model at $0.25/M tokens, with mid ($3/M) and frontier ($15/M) models not called."></a>
+  <figcaption>the routing architecture</figcaption>
+</figure>
+
+<p>Morph is the clearest example. Its router classifies prompt difficulty in milliseconds, then sends easy tasks to cheap models and hard tasks to frontier models, paying $0.25/M tokens for a typo fix instead of $15/M. The result: 40–70% cost reduction with under 2% quality loss on hard coding tasks.</p>
+<p>Morph also ships specialized components like fast apply and context compaction, proof that the router itself becomes a place to add value.</p>
+
+<figure class="reveal">
+  <a href="img/fusion-orchestration-routing/routing-profiles.png"><img src="img/fusion-orchestration-routing/routing-profiles.png" width="1200" height="752" loading="lazy" alt="Radar chart of model routing profiles comparing Fable 5, DeepSeek V4 Pro, DeepSeek V4 Flash, Opus 4.8 and GPT 5.5 on capability, ambiguity, domain fit, performance and cost efficiency."></a>
+  <figcaption>morph router: quality retained versus models like fable and deepseek</figcaption>
+</figure>
+
+<p>Morph isn't alone. Not Diamond trains a learned meta-router across 60+ models and powers OpenRouter's Auto endpoint. Martian (backed by NEA and General Catalyst, used by 300+ companies) claims up to 98% cost reduction by predicting model quality before inference. And the open-source RouteLLM from LMSYS set the public baseline: 95% of GPT-4 quality at roughly a quarter of the cost. Every major gateway, including LiteLLM, Portkey, and OpenRouter, now ships routing built in.</p>
+<p><b>Takeaway:</b> routing makes "which model?" a per-prompt decision instead of a one-time bet.</p>
+<p><b>Cost/tradeoff:</b> the cheapest layer to add (roughly $0.001–0.005 per classification and ~50–430ms of latency) for 40–70% savings, but a misclassified hard prompt sent to a weak model is a real quality risk.</p>
+
+<h3>fusion</h3>
+<p>Fusion runs multiple models in parallel, then has a judge analyze their answers and a synthesizer produce one final response.</p>
+
+<figure class="reveal">
+  <a href="img/fusion-orchestration-routing/fusion.png"><img src="img/fusion-orchestration-routing/fusion.png" width="1200" height="543" loading="lazy" alt="Fusion diagram: a prompt goes in parallel to Gemini 3 Flash, Kimi K2.6 and DeepSeek V4 Pro; a judge compares their answers and a synthesizer writes one answer."></a>
+  <figcaption>the fusion architecture</figcaption>
+</figure>
+
+<p>OpenRouter Fusion is the reference design. A prompt goes to several models at once, with tool access. A judge extracts consensus, flags contradictions, and surfaces blind spots. A synthesizer then writes the final answer from that analysis.</p>
+
+<figure class="reveal">
+  <a href="img/fusion-orchestration-routing/fusion-benchmarks.png"><img src="img/fusion-orchestration-routing/fusion-benchmarks.png" width="1200" height="927" loading="lazy" alt="Bar chart of benchmark scores: fusion panels such as Fable 5 + GPT-5.5 and Opus 4.8 + GPT-5.5 + Gemini 3.1 Pro score highest; solo models such as Gemini 3 Flash and Gemini 3.1 Pro score lowest."></a>
+  <figcaption>openrouter fusion benchmarks</figcaption>
+</figure>
+
+<p>The numbers are the story. A budget panel of Gemini 3 Flash + Kimi K2.6 + DeepSeek V4 Pro came within 1% of Fable 5 while costing roughly half as much. And the gains aren't mostly from picking diverse models: OpenRouter even ran Opus 4.8 paired with itself, judged by Opus 4.8, and still jumped 6.7 points over solo Opus. About 75% of the lift comes from synthesis, only 25% from diversity. The meta-layer, not the model pool, is doing the heavy lifting.</p>
+<p>The technique itself isn't new. It's Mixture-of-Agents (MoA), around since 2024. OpenRouter's move was productizing it behind a single API alias, so calling a five-model panel is as easy as calling one model.</p>
+<p><b>Takeaway:</b> fusion manufactures a frontier-quality answer out of cheaper parts, and most of the magic is in the synthesis.</p>
+<p><b>Cost/tradeoff:</b> you pay for every panel member plus the judge, so a budget panel lands near ~50% of a frontier model while a quality panel can run 2–3x its cost, and latency is 2–3x a single call. Worth it for high-stakes research, wasteful for simple prompts.</p>
+
+<h3>orchestration</h3>
+<p>Orchestration is the highest-level approach: a system, often an LLM itself, that manages a whole team of models dynamically.</p>
+
+<figure class="reveal">
+  <a href="img/fusion-orchestration-routing/orchestration.png"><img src="img/fusion-orchestration-routing/orchestration.png" width="1200" height="739" loading="lazy" alt="Orchestration diagram: a 7B RL-trained conductor LLM delegates to GPT as planner, Claude as coder, Gemini as verifier and an open DeepSeek model, can recursively call itself, and returns a synthesized answer."></a>
+  <figcaption>the orchestration architecture</figcaption>
+</figure>
+
+<p>Sakana AI's Fugu is exactly this. Fugu is an LLM that acts as a conductor, exposed through a single OpenAI-compatible API. Behind that one endpoint it routes, delegates, verifies, and synthesizes across a pool of models, including recursive calls to itself. The research behind it is striking: Sakana's Conductor is just a 7B model (fine-tuned from Qwen2.5 with reinforcement learning) that learned to manage a pool of frontier models like GPT, Claude, and Gemini in plain natural language, and beat every individual model in its pool. Letting it call itself as a worker creates recursive test-time scaling: it reads its own team's failed output and spins up a corrective workflow on the fly. Fugu Ultra matches Fable 5 and Mythos on hard benchmarks. It also adds a benefit no single model can: sovereignty, by routing around export controls and vendor restrictions.</p>
+
+<figure class="reveal">
+  <a href="img/fusion-orchestration-routing/sakana-fugu.png"><img src="img/fusion-orchestration-routing/sakana-fugu.png" width="1200" height="693" loading="lazy" alt="Sakana Fugu architecture: Fugu at the top routes to a pool of closed and open models, including another instance of itself."></a>
+  <figcaption>sakana fugu architecture</figcaption>
+</figure>
+
+<p><b>Takeaway:</b> orchestration hides an entire model team behind one API, and the conductor becomes the product.</p>
+<p><b>Cost/tradeoff:</b> cost is variable and usage-based (Fugu sells subscription and pay-as-you-go tiers), and a learned conductor uses fewer API calls than naive multi-agent baselines, but you trade unpredictable latency and spend for the highest ceiling of the three approaches.</p>
+
+<h2>how this weakens specialized intelligence</h2>
+<p>Put these together and the standalone specialist starts to look redundant.</p>
+<p>Routers make dynamic selection trivial. You no longer need to commit to a specialist, because the system can reach for one only when a prompt calls for it. Fusion goes further and creates virtual specialists on demand: combine the right models for this question and you get specialist-grade depth without a dedicated specialist model.</p>
+<p>The consequence is that value shifts to the meta-layer: the orchestrator, the judge, the router. That's where quality is now decided.</p>
+<p>The nuance worth keeping: specialization doesn't die, it becomes modular. A great code model is still useful, but as a component the system calls, not as a standalone product users buy directly. The leading specialists already see it. Cursor lets you swap Composer for GPT-5.5, Opus, or Gemini per task, and Glean's Model Hub mixes models across the steps of a single agent. The product is the system around the model, not the model.</p>
+<p><b>Takeaway:</b> specialists become parts, not products.</p>
+
+<h2>how this pushes the frontier</h2>
+<p>This isn't only a cost story. Combining models pushes performance forward in ways a single model can't.</p>
+<p><b>Better answers through diversity and synthesis.</b> Independent models make independent mistakes; a judge and synthesizer can cancel errors and merge strengths, reaching quality no single member had.</p>
+<p><b>High quality at lower cost.</b> Fusion's budget panel matching Fable 5 at ~50% cost, and Morph's 40–70% savings, show the quality-to-price curve bending in the user's favor.</p>
+<p><b>Greater resilience.</b> Multi-vendor systems survive one model's outage, regression, or restriction, and as Fugu shows, can even route around geopolitical and licensing limits.</p>
+<p><b>A new research focus.</b> Progress now has a second axis: not just scale the model, but coordinate the models. Judges, routers, and conductors are becoming research targets in their own right.</p>
+<p><b>Takeaway:</b> coordination is a new frontier, and it compounds with model quality rather than competing with it.</p>
+
+<h2>implications and challenges</h2>
+<p><b>For builders,</b> the lesson is to design at the system level: own the routing, judging, and synthesis logic, and treat models as swappable backends.</p>
+<p><b>For labs,</b> raw benchmark wins matter less if a cheaper panel can match them. The defensible position is being the indispensable component, or moving up into the orchestration layer yourself.</p>
+<p><b>For platforms,</b> the meta-layer is the new product surface, and the user relationship lives there.</p>
+<p>It's not free, though. These systems add latency (multiple calls, then synthesis), introduce variability (more moving parts, more failure modes), and are overkill for simple tasks where one cheap model already suffices. The honest framing: fusion and orchestration are for the hard, high-value requests, not for every prompt.</p>
+<p><b>Takeaway:</b> the meta-layer wins on hard problems, but adds cost and complexity; you should only pay when it's worth it.</p>
+
+<h2>conclusion</h2>
+<p>The shift is this: for years the winner was whoever trained the single best model. Now a thin layer of routing, fusion, and orchestration can assemble frontier-level performance from cheaper, diverse, swappable parts, matching the best monolithic models at a fraction of the cost, while making both giant generalists and narrow specialists less valuable on their own.</p>
+<p>The model is no longer the moat. The value has moved up a layer, to the system that knows how to combine the models, and that layer is only getting started.</p>
+
+</article>
+
+<footer class="post-foot">
+  <p>Influences: OpenRouter, Sakana AI, Morph ++ several more.</p>
+  <p><a href="./">&larr; all writing</a> &nbsp;·&nbsp; <a href="https://x.com/arjanssuri">thoughts? find me on x</a></p>
+</footer>
+
+</main>
+
+<script src="blog.js"></script>
+
+</body>
+</html>

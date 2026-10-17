@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tempo &amp; MPP: The Payment Rails Powering AI's Next Trillion-Dollar Boom · arjan suri</title>
+<meta name="description" content="Tempo and Stripe's Machine Payments Protocol lets AI agents pay for real-world services over the web with cards or stablecoins, no custom integrations or API keys required.">
+<meta property="og:title" content="Tempo &amp; MPP: The Payment Rails Powering AI's Next Trillion-Dollar Boom">
+<meta property="og:description" content="HTTP 402 becomes a universal paywall + receipt flow for AI agents.">
+<meta property="og:image" content="img/tempo-mpp/header.png">
+<link rel="icon" href="avatar.jpg">
+<link rel="stylesheet" href="blog.css">
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<main class="page">
+
+<header class="masthead">
+  <a class="home" href="https://arjansuri.com/"><img src="avatar.jpg" alt=""><span>arjan suri</span></a>
+  <a class="back" href="./">&larr; writing</a>
+</header>
+
+<header class="post-head">
+  <h1>Tempo &amp; MPP: The Payment Rails Powering AI&rsquo;s Next Trillion-Dollar Boom</h1>
+  <p class="byline">arjan suri, rishik kolpekwar<br>march 18, 2026 · <span id="read-time">5 min read</span></p>
+</header>
+
+<figure class="hero">
+  <img src="img/tempo-mpp/header.png" width="1200" height="480" alt="Chalkboard illustration: Tempo connects a blockchain and a card terminal through MPP to AI agents, which reach email, cloud, phone, messaging and shopping services.">
+</figure>
+
+<article class="prose">
+
+<p><b>TL;DR:</b> Tempo &amp; Stripe's new Machine Payments Protocol (MPP) lets AI agents pay for real-world services over the web using either cards or stablecoins, no custom integrations or API keys required. Built on Tempo&rsquo;s L1 with extensions from Stripe, Visa, Lightspark and others, it turns HTTP 402 into a universal &ldquo;paywall + receipt&rdquo; flow that already works with 40+ services today, from letters and phone calls to image generation and debit cards.</p>
+
+<h2>What is Machine Payments Protocol (MPP)?</h2>
+<p>MPP is an open standard for AI agents to pay anyone/anything, supporting both fiat (normal cash) and crypto (stablecoins). Stripe handles the fiat side, Tempo handles the crypto/blockchain side, and Visa contributed card payment specs. It launched today alongside Tempo's mainnet.</p>
+
+<h2>What is Tempo?</h2>
+<p>Tempo is a new blockchain backed by Paradigm (VC firm w/ 12.7B AUM) and Stripe (you know this one...) that&rsquo;s optimized for super fast, small, machine-to-machine payments, especially for AI agents paying for APIs, compute, and data. It&rsquo;s the payment rail behind Machine Payments Protocol (MPP), letting agents pay with stablecoins or other digital dollars while still plugging into existing card and banking networks.</p>
+
+<h2>What is x402 and how does MPP improve on it?</h2>
+<p>x402 is an older, simpler protocol built by Coinbase that also lets AI agents make payments but with some key limitations. It's crypto-native only (no fiat or card support), and it's intentionally minimal by design. The name comes from HTTP status code 402, which has been reserved since the early days of the web and literally means &ldquo;Payment Required.&rdquo; When an AI agent hits a paywall, the server returns a 402, and x402 uses that signal to trigger a crypto payment automatically.</p>
+<p>It was a clever first step but it only works within the crypto ecosystem, which limits how widely agents can use it in the real world. That's part of what MPP was built to solve.</p>
+
+<figure class="reveal">
+  <a href="img/tempo-mpp/mpp-vs-x402.png"><img src="img/tempo-mpp/mpp-vs-x402.png" width="1024" height="1024" loading="lazy" alt="MPP vs x402 comparison. MPP, built by Stripe and Tempo, is rail-agnostic (stablecoins, cards via Stripe and Visa, Bitcoin via Lightspark) with a formal IETF spec, streaming sessions, receipts and a directory of 100+ services. x402, built by Coinbase, is crypto-native only with a minimalist spec. Both are triggered by HTTP 402, support stablecoins, and are supported by Stripe."></a>
+  <figcaption>MPP vs x402</figcaption>
+</figure>
+
+<h2>How it Works: The Full Flow</h2>
+<p>An AI agent (the CLIENT) wants something: data, compute, an API response. It sends a standard web request: <code>GET /resource</code>. The server doesn't just hand it over. Instead it fires back a <code>402 Payment Required</code>, an HTTP error code that's been sitting dormant since the early internet, originally meant for paywalls that never got built. MPP is helping to give it a job.</p>
+<p>That 402 response comes with a <code>WWW-Authenticate: Payment</code> header that essentially says &ldquo;here are the ways you can pay me.&rdquo; The server offers two rails:</p>
+<ul>
+  <li><b>Tempo</b> signs a stablecoin transaction on Tempo's Layer 1 blockchain, incubated by Stripe and Paradigm. This is the crypto path.</li>
+  <li><b>Stripe</b> completes a card payment the traditional way. Visa sits on top of this, having extended MPP to make card payments work natively in the protocol.</li>
+</ul>
+<p>The agent picks one, pays, and now holds a Payment Credential, a cryptographic proof that money moved. It retries the exact same request, this time with an <code>Authorization: Payment</code> header attached. The server checks the proof, confirms settlement happened, and finally returns <code>200 OK</code> with the resource and a <code>Payment-Receipt</code>, a signed confirmation that delivery occurred.</p>
+<p>On the bottom left the diagram shows Protocol Extensions. Visa extended MPP for cards, Lightspark extended it for Bitcoin over Lightning. This is the open-standard part. Anyone can plug into MPP on their own rail.</p>
+<p>On the bottom right is the Tempo Mainnet Ecosystem: Anthropic, OpenAI, Visa, Mastercard, Shopify, DoorDash, Nubank, Revolut, Ramp, Standard Chartered. These are the companies that have committed real payment workloads to Tempo's chain on day one.</p>
+
+<figure class="reveal">
+  <a href="img/tempo-mpp/mpp-flow.png"><img src="img/tempo-mpp/mpp-flow.png" width="1200" height="805" loading="lazy" alt="Sequence diagram of the MPP flow between client and server: request, 402 payment challenge, pay via Tempo or Stripe, retry with an Authorization: Payment header, then 200 OK with a Payment-Receipt header. Side panels show Visa and Lightspark protocol extensions and Tempo mainnet ecosystem backers."></a>
+  <figcaption>Machine Payment Protocol (MPP) flow</figcaption>
+</figure>
+
+<h2>An Agent's POV of MPP + Tempo</h2>
+<h3>What Agents Can Do on Tempo</h3>
+<ul>
+  <li><b>Mail a real letter</b> — AI writes it, PostalForm prints and mails it for $3.40</li>
+  <li><b>Make phone calls</b> — StablePhone calls a number with a script, returns transcript</li>
+  <li><b>Generate images/video</b> — Flux, Sora, Grok via fal.ai. Pay per generation</li>
+  <li><b>Spin up debit cards</b> — Laso Finance creates disposable virtual cards on demand</li>
+  <li><b>Order a sandwich</b> — Prospect Butcher. First food purchase made entirely by AI</li>
+  <li><b>Spy on competitors</b> — SpyFu pulls 18 years of SEO/PPC data per query</li>
+  <li><b>Generate music</b> — Suno produces full songs from a text prompt</li>
+</ul>
+
+<h2>How I tested it</h2>
+<pre><code>npm install -g mppx
+mppx account create          # wallet: 0xd021...
+mppx account fund            # testnet tokens
+mppx https://mpp.dev/api/ping/paid   # first paid request ✅</code></pre>
+<p>Then validated a real letter order:</p>
+<pre><code>mppx -X POST -J '{"recipient_name":"...", "pdf":"..."}' \
+  postalform.com/api/machine/mpp/orders/validate
+# → $3.40 quote, ready to mail</code></pre>
+<p class="pull">40 services, zero signups. Wallet is the only credential.</p>
+
+<h2>Our Take on Tempo &amp; MPP</h2>
+<p>We believe that there are still bottlenecks to onboarding agents to MPP and quoting endpoints for each resource, but that&rsquo;s all expected given the protocol &amp; blockchain just launched mainnet.</p>
+<p>Our AI collaborator also came to a conclusion:</p>
+<blockquote>
+  <p>&ldquo;Verdict: Super useful for one-off paid API calls without signup friction. The service discovery (<code>tempo services --search</code>) is genuinely great — finding and calling 40+ APIs without creating a single account is a real unlock for agents.&rdquo;</p>
+</blockquote>
+<p>And Ideas for Improvement:</p>
+<blockquote>
+  <p>&ldquo;What could be better: The wallet funding flow needs work — testnet is instant but getting real USDC onto Tempo requires bridging, which is still a multi-step human task. Also, mppx worked headless but tempo wallet needed passkeys (browser + biometrics), which is a dealbreaker for server-side agents.&rdquo;</p>
+  <p>&ldquo;Pricing transparency could improve too — most services say &lsquo;dynamic&rsquo; pricing with no estimate until you actually hit the endpoint. A <code>--dry-run</code> with cost preview on every service would go a long way.&rdquo;</p>
+</blockquote>
+
+<h2>Sources &amp; Good Reads</h2>
+<ul>
+  <li><a href="https://docs.tempo.xyz/">Tempo Docs</a></li>
+  <li><a href="https://www.forbes.com/sites/ninabambysheva/2026/03/18/paradigm-and-stripe-roll-out-new-payment-standard-for-ai-agents-with-visas-support/">Forbes</a>: an article debriefing Tempo's launch</li>
+  <li><a href="https://x.com/stripe/status/2034257912973963374">Stripe's post on MPP</a></li>
+</ul>
+
+<figure class="reveal">
+  <a href="https://x.com/stripe/status/2034257912973963374"><img src="img/tempo-mpp/stripe-post.png" width="1200" height="480" loading="lazy" alt="Code snippet from Stripe's post: stripe.paymentIntents.create with payment_method_types crypto, deposit mode, and the tempo network."></a>
+  <figcaption>from Stripe's post on MPP</figcaption>
+</figure>
+
+</article>
+
+<footer class="post-foot">
+  <p>Contact us via DM or: arjanssuri on <a href="https://t.me/arjanssuri">Telegram</a> · <a href="mailto:arjan.suri17@gmail.com">arjan.suri17@gmail.com</a> · <a href="mailto:rishikkolpekwar@gmail.com">rishikkolpekwar@gmail.com</a></p>
+  <p><a href="./">&larr; all writing</a> &nbsp;·&nbsp; <a href="https://x.com/arjanssuri">thoughts? find me on x</a></p>
+</footer>
+
+</main>
+
+<script src="blog.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gpu-setup: free way to run Karpathy's Autoresearch · arjan suri</title>
+<meta name="description" content="What Karpathy's Autoresearch is, how it works, and a one-script way to run it on a free-credit H100 via Akash.">
+<meta property="og:title" content="gpu-setup: free way to run Karpathy's Autoresearch">
+<meta property="og:description" content="I ran Karpathy's Autoresearch 24/7 for free. Here's my setup.">
+<meta property="og:image" content="img/gpu-setup/header.png">
+<link rel="icon" href="avatar.jpg">
+<link rel="stylesheet" href="blog.css">
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<main class="page">
+
+<header class="masthead">
+  <a class="home" href="https://arjansuri.com/"><img src="avatar.jpg" alt=""><span>arjan suri</span></a>
+  <a class="back" href="./">&larr; writing</a>
+</header>
+
+<header class="post-head">
+  <h1>gpu-setup: free way to run Karpathy&rsquo;s Autoresearch</h1>
+  <p class="byline">arjan suri<br>march 14, 2026 · <span id="read-time">6 min read</span></p>
+</header>
+
+<figure class="hero">
+  <img src="img/gpu-setup/header.png" width="1200" height="480" alt="I ran Karpathy's Autoresearch 24/7 for free. Here's my setup: deploy.sh, status.sh and teardown.sh talk to the Akash API, which leases a GPU provider that boots a container with PyTorch, clones autoresearch, downloads data and starts sshd.">
+</figure>
+
+<article class="prose">
+
+<h2>What is Autoresearch?</h2>
+<p>Autoresearch is a small open&#8209;source project from Andrej Karpathy that turns a single&#8209;GPU ML training setup into an autonomous &ldquo;experiment loop&rdquo; an AI agent can run for you. Instead of promising a general AI scientist, it focuses on one narrow job: automatically tweaking a compact language&#8209;model training script, running short experiments, and keeping only the changes that improve a fixed evaluation metric.</p>
+<p>The repo is intentionally tiny (around 600&ndash;630 lines of Python) and built on a stripped&#8209;down version of Karpathy&rsquo;s nanochat LLM trainer. A human writes the research &ldquo;program&rdquo; in a Markdown file, and an external LLM agent (Claude, Codex, etc.) uses that spec to decide how to edit the training code and what to try next.</p>
+
+<h2>Why should I care?</h2>
+<p>Better neural network architectures give you more capable models without more hardware, so systematically exploring architectures is one of the highest&#8209;ROI things you can do in ML.</p>
+<p>Autoresearch is Karpathy&rsquo;s way of turning that exploration into a closed loop: an agent is allowed to rewrite a compact training script, run 5&#8209;minute experiments on a fixed dataset, and keep only the changes that improve a simple metric like validation bits&#8209;per&#8209;byte.</p>
+<p>If this pattern scales, it means a single GPU can quietly grind through hundreds of architecture and training tweaks while you sleep, making &ldquo;AI that improves AI&rdquo; a practical tool instead of a thought experiment.</p>
+<p>I think Manthan Gupta did a great job of explaining this. If you want more, <a href="https://x.com/manthanguptaa/status/2032464949952598152">read his article here</a>.</p>
+
+<h2>How it Works</h2>
+<p>At a high level, Autoresearch turns &ldquo;AI research&rdquo; into a bounded optimization problem.</p>
+<p>The agent is not browsing papers, forming original theories, or deciding what science should matter. Its job is much narrower, and revolves around this scientific loop:</p>
+<ol>
+  <li>Edit the training code</li>
+  <li>Run an experiment for a fixed amount of time</li>
+  <li>Measure the result using a fixed metric</li>
+  <li>Keep the change if it improves the score</li>
+  <li>Revert it if it does not</li>
+  <li>Repeat</li>
+</ol>
+
+<h3>Repository Structure</h3>
+<pre><code>autoresearch/
+  ├── .gitignore
+  ├── .python-version
+  ├── README.md           # project overview + quick start
+  ├── analysis.ipynb      # notebook for analyzing experiment results
+  ├── prepare.py          # fixed: data download, tokenizer, dataloader, eval (DO NOT MODIFY)
+  ├── train.py            # the one file the agent edits: model, optimizer, training loop
+  ├── program.md          # instructions for the AI agent ("the skill")
+  ├── progress.png        # teaser image for README
+  ├── pyproject.toml      # dependencies (torch, numpy, tiktoken, etc.)
+  └── uv.lock             # lockfile for uv</code></pre>
+<p>Autoresearch really lives in three files: <code>program.md</code>, <code>prepare.py</code>, and <code>train.py</code>.</p>
+<ul>
+  <li><b>program.md:</b> the human&#8209;authored research script that tells the agent what metric to optimize, what it&rsquo;s allowed to edit, how to launch runs, and when to keep or revert a change.</li>
+  <li><b>prepare.py:</b> the fixed environment: it downloads the dataset, builds tokenizers and dataloaders, and defines the validation evaluation loop. The agent cannot touch this file, which means it can&rsquo;t game the metric by quietly changing the data split or eval code.</li>
+  <li><b>train.py:</b> the entire playground the agent operates in. It contains the compact GPT&#8209;style model, optimizer, hyperparameters, and training loop wired into <code>prepare.py</code>&rsquo;s data and eval. Every &ldquo;research&rdquo; step the agent takes is just another diff to this one file.</li>
+</ul>
+
+<figure class="reveal">
+  <a href="img/gpu-setup/experiment-loop.png"><img src="img/gpu-setup/experiment-loop.png" width="1200" height="805" loading="lazy" alt="Flowchart of the Autoresearch loop: verify baseline, modify training code, commit, run the training job; if it crashes, analyze logs and either fix and restart or document the failure; otherwise read the metric, analyze, update results, and accept the change if performance improved or revert it if not, then proceed to the next step."></a>
+  <figcaption>the autoresearch experiment loop</figcaption>
+</figure>
+
+<h2>Quickstart | The Easiest Way to Run Autoresearch</h2>
+<p>Karpathy's original repository outlines the requirements to run autoresearch.</p>
+<p><b>Requirements:</b> A single NVIDIA GPU (tested on H100), Python 3.10+, uv.</p>
+<p>Some providers you can use include:</p>
+<ul>
+  <li>Runpod</li>
+  <li>Akash Network (my preference b/c you get $100 in free credits)</li>
+</ul>
+<p>I set up a quick script in <a href="https://github.com/arjanssuri/autoresearch_gpu_setup">my fork of the original Karpathy repository</a> in case you need help deploying the Akash GPU.</p>
+
+<h3>gpu-setup | requirements</h3>
+<p>You need four things before starting:</p>
+<ol>
+  <li>An Akash Console account: sign up at <a href="https://console.akash.network">console.akash.network</a>. New accounts get free credits.</li>
+  <li>An Akash API key: grab one from the Console dashboard. It starts with <code>ac.sk.</code></li>
+  <li><b>jq</b>, a command line JSON tool. Install it:
+    <br>Mac: <code>brew install jq</code>
+    <br>Linux: <code>sudo apt-get install -y jq</code></li>
+  <li><b>sshpass</b>, which lets you SSH with a password in one command:
+    <br>Mac: <code>brew install hudochenkov/sshpass/sshpass</code>
+    <br>Linux: <code>sudo apt-get install -y sshpass</code></li>
+</ol>
+
+<h3>gpu-setup | steps to run</h3>
+<p><b>1. Clone this repository</b></p>
+<pre><code>git clone https://github.com/arjanssuri/autoresearch_gpu_setup.git
+cd autoresearch_gpu_setup</code></pre>
+<p><b>2. Add your API key.</b> Create a file called <code>.env</code> in the repo root:</p>
+<pre><code>echo "AKASH_API_KEY=ac.sk.production.your-key-here" &gt; .env</code></pre>
+<p><b>3. Deploy</b></p>
+<pre><code>cd gpu-setup
+./deploy.sh</code></pre>
+<p><b>4. Wait for setup.</b> The container needs ~5 minutes after deploy to finish installing everything. You can check if it's ready:</p>
+<pre><code>./status.sh</code></pre>
+<p>Look for <code>"ready": 1</code>. That means it's good to go.</p>
+<p><b>5. SSH in.</b> The deploy script prints your exact SSH command. It looks like this:</p>
+<pre><code>sshpass -p 'autoresearch' ssh -p &lt;PORT&gt; root@&lt;HOST&gt;</code></pre>
+<p><b>6. Run Autoresearch</b></p>
+<pre><code>cd /workspace/autoresearch
+uv run train.py</code></pre>
+<p>That runs one 5-minute training experiment. To start the full autonomous loop where the AI runs experiments on its own:</p>
+<pre><code># install claude code
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+apt-get install -y nodejs
+npm install -g @anthropic-ai/claude-code
+
+# set your anthropic key
+export ANTHROPIC_API_KEY=your-anthropic-key
+
+# start the loop
+claude "Read program.md and let's kick off a new experiment"</code></pre>
+<p><b>7. Teardown when done</b></p>
+<pre><code>cd gpu-setup
+./teardown.sh</code></pre>
+
+<h3>What you get</h3>
+<ul>
+  <li>NVIDIA H100 80GB or A100 80GB</li>
+  <li>8 CPU cores, 64GB RAM, 30GB storage</li>
+  <li>PyTorch 2.5.1 + CUDA 12.4</li>
+  <li>autoresearch cloned and ready at <code>/workspace/autoresearch</code></li>
+  <li>SSH password: <code>autoresearch</code></li>
+</ul>
+
+<h3>Cost</h3>
+<p>The deploy script picks the cheapest GPU bid automatically. With $100 in credits you can run for several hours. The $5 escrow deposit gets returned (minus usage) when you tear down.</p>
+
+<h3>Customizing</h3>
+<p>Edit <code>deploy.yaml</code> if you want to change the GPU model, memory, storage, or base Docker image.</p>
+
+<h3>gpu-setup | How It Works</h3>
+<pre><code>.env (API key)
+    │
+    ▼
+deploy.sh ──► Akash API ──► GPU Provider ──► Container
+    │              │              │              │
+    │         POST /v1/deployments          boots PyTorch image
+    │              │                            │
+    │         GET /v1/bids                  installs deps
+    │         (picks cheapest)              clones autoresearch
+    │              │                        downloads data
+    │         POST /v1/leases               starts sshd
+    │              │                            │
+    │         saves .deployment              ready for SSH
+    ▼
+status.sh ──► GET /v1/deployments/{dseq} ──► shows ready/host/port
+
+teardown.sh ──► DELETE /v1/deployments/{dseq} ──► closes, returns deposit</code></pre>
+
+<figure class="reveal">
+  <a href="img/gpu-setup/lifecycle.png"><img src="img/gpu-setup/lifecycle.png" width="1024" height="1024" loading="lazy" alt="gpu-setup: full lifecycle management of GPU containers on Akash. deploy.sh creates a deployment, collects bids and picks the cheapest H100 or A100, then creates a lease; status.sh polls readiness; teardown.sh closes the deployment and returns the deposit. deploy.yaml specifies the PyTorch image, 1 GPU, 8 CPU, 64GB RAM, 30GB disk and exposes port 22."></a>
+  <figcaption>gpu-setup: full lifecycle management of GPU containers on Akash</figcaption>
+</figure>
+
+<p>And you're set up!</p>
+
+<h2>Conclusion</h2>
+<p>Autoresearch is the interesting idea; gpu-setup is the part that makes it practical to use. With a single script and an Akash API key, you can go from reading about the repo to actually running it on an H100 in a few minutes. If you have been curious about agentic research but blocked by infrastructure and CUDA issues, this flow removes most of that friction so you can focus on writing a good <code>program.md</code> and letting the loop run.</p>
+
+<h2>Credits, Inspiration, and Good Reads</h2>
+<ul>
+  <li>Manthan Gupta: <a href="https://x.com/manthanguptaa/status/2032464949952598152">How Karpathy's Autoresearch Works And What You Can Learn From It</a></li>
+  <li>Garry Tan: <a href="https://garryslist.org/posts/karpathy-just-turned-one-gpu-into-a-research-lab-f55754a6">Karpathy just turned one GPU into a research lab</a></li>
+  <li>Andrej Karpathy: <a href="https://github.com/karpathy/autoresearch">the original repository</a></li>
+  <li>My repo: <a href="https://github.com/arjanssuri/autoresearch_gpu_setup">autoresearch_gpu_setup</a></li>
+</ul>
+
+</article>
+
+<footer class="post-foot">
+  <p>If you have any questions, <a href="https://x.com/arjanssuri">DM me</a> or email me. I plan on responding to every question I get (within reason). Thanks so much for reading!</p>
+  <p><i>Email me: <a href="mailto:arjan.suri@my.utexas.edu">arjan.suri@my.utexas.edu</a></i></p>
+  <p><a href="./">&larr; all writing</a></p>
+</footer>
+
+</main>
+
+<script src="blog.js"></script>
+
+</body>
+</html>

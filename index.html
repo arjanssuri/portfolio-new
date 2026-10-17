@@ -4,120 +4,213 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>arjan suri</title>
-<link rel="stylesheet" href="style.css">
+<link rel="icon" href="arjan-avatar.jpg">
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
 
-<div class="container">
+<main class="page">
 
-<header>
-  <h1>arjan suri<span class="cursor">_</span></h1>
-  <p class="tagline">cs &amp; math @ ut austin · <b>building something new</b> · 2+ publications in ai/ml</p>
-  <p class="links">
-    <a href="https://www.linkedin.com/in/arjansuri/">linkedin</a> /
-    <a href="https://github.com/arjanssuri">github</a> /
-    <a href="https://www.instagram.com/arjanssuri/">instagram</a> /
-    <a href="mailto:arjan.suri17@gmail.com">email</a> /
-    <a href="https://cal.com/arjan-suri/15min">book a call</a>
-  </p>
+<header class="top">
+  <button class="name" type="button" aria-label="arjan suri">
+    <img class="avatar" src="arjan-avatar.jpg" alt="">
+    <h1>arjan suri</h1>
+  </button>
+  <div class="meta">
+    <div id="date">&nbsp;</div>
+    <a class="writing-link" href="blog/">writing &rarr;</a>
+  </div>
 </header>
 
-<section>
-<p>i study cs and applied math at ut austin.</p>
+<section class="intro">
+  <p>hey! i'm arjan, 19, studying cs &amp; applied math at
+    <a href="https://www.utexas.edu" class="org"><img src="https://www.google.com/s2/favicons?domain=utexas.edu&sz=64" alt="">ut austin</a>.
+    this fall i'm an ml engineer intern at
+    <a href="https://www.shopify.com" class="org"><img src="https://www.google.com/s2/favicons?domain=shopify.com&sz=64" alt="">shopify</a>
+    working on recommendations &amp; post-training. this summer i built agentic harnesses at
+    <a href="https://www.circle.com" class="org"><img src="https://www.google.com/s2/favicons?domain=circle.com&sz=64" alt="">circle</a>.
+    right now i'm <mark class="hl">building something new</mark>.</p>
+
+  <p>i believe intelligence, willpower, and free markets are the cornerstone resources of civilization's upward spiral.
+    compounded by ai, they will drive exponential growth that carries a <span class="ul">trillion people</span> across the galaxy and turns
+    today's moonshots in <span class="ul">bioscience</span> and <span class="ul">space</span> into tomorrow's reality.</p>
+
+  <nav class="links">
+    <a href="https://x.com/arjanssuri" aria-label="x" title="x">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/arjansuri/" aria-label="linkedin" title="linkedin">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+    </a>
+    <a href="https://github.com/arjanssuri" aria-label="github" title="github">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+    <a href="https://www.instagram.com/arjanssuri/" aria-label="instagram" title="instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.3"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="mailto:arjan.suri17@gmail.com" aria-label="email" title="email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="2" y="4.5" width="20" height="15" rx="2.5"/><path d="m3 6.5 9 6.5 9-6.5"/></svg>
+    </a>
+    <a href="https://cal.com/arjan-suri/15min" aria-label="book a call" title="book a call">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="17.5" rx="2.5"/><path d="M2.5 9.5h19M7.5 2v4M16.5 2v4"/></svg>
+    </a>
+  </nav>
 </section>
 
 <section>
-<h2>projects</h2>
-<ul>
-  <li>gambl — agents play multiplayer games to win crypto. <a href="https://www.youtube.com/watch?v=Qn5LizBW53A">demo</a></li>
-  <li><a href="https://github.com/essos-live/">essos</a> — x402 sdk. circle &amp; solana winner, midwest blockchain conf. <a href="https://www.youtube.com/watch?v=-lXyYUP3NxY">demo</a></li>
-  <li>coffeechat — palantir hackathon. <a href="https://www.loom.com/share/3f7c6a7f54494bf59201831ee79d16d9">demo</a></li>
-  <li>maples — multimodal osce scorer. <a href="https://www.loom.com/share/11cfee581f824655bce0321c58b7b455">demo</a></li>
-  <li><a href="https://enrichify.org">enrichify</a> — financial education platform. <a href="https://www.southlakestyle.com/community/people/dragons-start-financial-nonprofit/">southlake style</a>, <a href="https://canvasrebel.com/meet-anson-omar-arjan-suri-and-ayan-bakshi/">canvas rebel</a>.</li>
-  <li><a href="https://paygratis.xyz">pay gratis</a> — zero-fee payments.</li>
-</ul>
+  <h2>projects</h2>
+  <ul class="rows grid">
+    <li>
+      <div><span class="title">gambl</span> <a class="sub" href="https://www.youtube.com/watch?v=Qn5LizBW53A">(demo)</a></div>
+      <div class="desc">agents play multiplayer games to win crypto</div>
+    </li>
+    <li>
+      <div><a class="title" href="https://github.com/essos-live/">essos</a> <a class="sub" href="https://www.youtube.com/watch?v=-lXyYUP3NxY">(demo)</a></div>
+      <div class="desc">x402 sdk · circle &amp; solana winner</div>
+    </li>
+    <li>
+      <div><span class="title">coffeechat</span> <a class="sub" href="https://www.loom.com/share/3f7c6a7f54494bf59201831ee79d16d9">(demo)</a></div>
+      <div class="desc">palantir hackathon</div>
+    </li>
+    <li>
+      <div><span class="title">maples</span> <a class="sub" href="https://www.loom.com/share/11cfee581f824655bce0321c58b7b455">(demo)</a></div>
+      <div class="desc">multimodal osce scorer</div>
+    </li>
+  </ul>
+
+  <details class="earlier">
+    <summary>2 more</summary>
+    <ul class="rows grid">
+    <li>
+      <div><a class="title" href="https://enrichify.org">enrichify</a> <a class="sub" href="https://www.southlakestyle.com/community/people/dragons-start-financial-nonprofit/">(southlake style)</a> <a class="sub" href="https://canvasrebel.com/meet-anson-omar-arjan-suri-and-ayan-bakshi/">(canvas rebel)</a></div>
+      <div class="desc">financial education platform</div>
+    </li>
+    <li>
+      <div><a class="title" href="https://paygratis.xyz">pay gratis</a></div>
+      <div class="desc">zero-fee payments</div>
+    </li>
+    </ul>
+  </details>
 </section>
 
 <section>
-<h2>publications</h2>
-<ul>
-  <li><a href="https://doi.org/10.1098/rsif.2025.0481">mathematical modelling of oncolytic vaccinia virus therapy</a>. <i>j. r. soc. interface</i>, 2025.</li>
-  <li><a href="https://pubmed.ncbi.nlm.nih.gov/40265347/">dynamical differences in vaccinated vs unvaccinated rsv patients</a>. <i>epidemiologia</i>, 2025.</li>
-</ul>
+  <h2>publications</h2>
+  <ul class="rows single">
+    <li>
+      <div><a class="title" href="https://doi.org/10.1098/rsif.2025.0481">mathematical modelling of oncolytic vaccinia virus therapy</a></div>
+      <div class="desc">journal of the royal society interface</div>
+      <span class="when">2025</span>
+    </li>
+    <li>
+      <div><a class="title" href="https://pubmed.ncbi.nlm.nih.gov/40265347/">dynamical differences in vaccinated vs unvaccinated rsv patients</a></div>
+      <div class="desc">epidemiologia</div>
+      <span class="when">2025</span>
+    </li>
+  </ul>
 </section>
 
 <section>
-<h2>experience</h2>
+  <h2>experience</h2>
+  <ul class="rows inline">
+    <li>
+      <div><a class="title" href="https://www.shopify.com">shopify</a></div>
+      <div class="desc">ml engineer intern · recommendations &amp; post-training</div>
+      <span class="when">fall 2026</span>
+    </li>
+    <li>
+      <div><a class="title" href="https://www.circle.com">circle</a></div>
+      <div class="desc">swe intern · agentic harnesses</div>
+      <span class="when">summer 2026</span>
+    </li>
+    <li>
+      <div><a class="title" href="https://justinhart.net/">ut austin autonomous robots lab</a></div>
+      <div class="desc">research analyst</div>
+      <span class="when">2025</span>
+    </li>
+  </ul>
 
-<h3>2026</h3>
-<ul>
-  <li><a href="https://www.shopify.com" class="plain">shopify</a> — ml engineer intern | fall 2026 | foundation models &amp; search</li>
-  <li><a href="https://www.circle.com" class="plain">circle</a> — swe intern | summer 2026 | agentic harnesses</li>
-</ul>
-
-<h3>2025</h3>
-<ul>
-  <li><a href="https://github.com/duckdb/duckdb">duckdb</a> — open source contributor.</li>
-  <li><a href="https://justinhart.net/" class="plain">ut austin autonomous robots lab</a> — research analyst.</li>
-  <li><a href="https://www.longhornracing.org" class="plain">longhorn racing</a> — aerodynamics engineer.</li>
-  <li>texas blockchain — member.</li>
-  <li><a href="https://labs.utsouthwestern.edu/jamieson-lab/about-us">ut southwestern</a> — research analyst.</li>
-</ul>
-
-<h3>2024</h3>
-<ul>
-  <li><a href="https://www.tcu.edu" class="plain">tcu</a> — research associate.</li>
-  <li>newshore partners — pe intern.</li>
-  <li><a href="https://www.onixnet.com/" class="plain">onix</a> — strategic solutions intern.</li>
-  <li><a href="https://www.hscore.com/" class="plain">hscore</a> — quant analyst intern.</li>
-</ul>
-
-<h3>2023</h3>
-<ul>
-  <li><a href="https://www.utdallas.edu" class="plain">ut dallas</a> — research analyst.</li>
-  <li><a href="https://nxgim.com/" class="plain">nxg</a> — investment analyst intern.</li>
-</ul>
+  <details class="earlier">
+    <summary>10 more</summary>
+    <ul class="rows inline">
+    <li>
+      <div><a class="title" href="https://github.com/duckdb/duckdb">duckdb</a></div>
+      <div class="desc">open source contributor</div>
+      <span class="when">2025</span>
+    </li>
+      <li>
+        <div><a class="title" href="https://labs.utsouthwestern.edu/jamieson-lab/about-us">ut southwestern</a></div>
+        <div class="desc">research analyst</div>
+        <span class="when">2025</span>
+      </li>
+      <li>
+        <div><a class="title" href="https://www.longhornracing.org">longhorn racing</a></div>
+        <div class="desc">aerodynamics engineer</div>
+        <span class="when">2025</span>
+      </li>
+      <li>
+        <div><span class="title">texas blockchain</span></div>
+        <div class="desc">member</div>
+        <span class="when">2025</span>
+      </li>
+      <li>
+        <div><a class="title" href="https://www.tcu.edu">tcu</a></div>
+        <div class="desc">research associate</div>
+        <span class="when">2024</span>
+      </li>
+      <li>
+        <div><span class="title">newshore partners</span></div>
+        <div class="desc">pe intern</div>
+        <span class="when">2024</span>
+      </li>
+      <li>
+        <div><a class="title" href="https://www.onixnet.com/">onix</a></div>
+        <div class="desc">strategic solutions intern</div>
+        <span class="when">2024</span>
+      </li>
+      <li>
+        <div><a class="title" href="https://www.hscore.com/">hscore</a></div>
+        <div class="desc">quant analyst intern</div>
+        <span class="when">2024</span>
+      </li>
+      <li>
+        <div><a class="title" href="https://www.utdallas.edu">ut dallas</a></div>
+        <div class="desc">research analyst</div>
+        <span class="when">2023</span>
+      </li>
+      <li>
+        <div><a class="title" href="https://nxgim.com/">nxg</a></div>
+        <div class="desc">investment analyst intern</div>
+        <span class="when">2023</span>
+      </li>
+    </ul>
+  </details>
 </section>
 
 <section>
-<h2>awards</h2>
-<ul>
-  <li><a href="https://www.ycombinator.com/">y combinator</a> ai startup school.</li>
-  <li><a href="https://usaco.org/">usaco</a> gold.</li>
-  <li>national merit finalist.</li>
-  <li>ut austin forty acres semifinalist.</li>
-  <li><a href="https://meetings.aps.org/Meeting/TSF24/Session/FB01.7">aps fall 2024</a> presenter.</li>
-  <li><a href="https://www.southlakechamber.com/list/member/enrichify-9681">southlake chamber of commerce</a>.</li>
-  <li><a href="https://southlaketx.new.swagit.com/videos/313998">southlake city council honoree</a>.</li>
-  <li><a href="https://carrollisdtx.new.swagit.com/videos/318164">carroll administrative board honoree</a>.</li>
-</ul>
+  <h2>recognition</h2>
+  <p class="prose-list">
+    <a href="https://www.ycombinator.com/">y combinator</a> ai startup school ·
+    <a href="https://usaco.org/">usaco</a> gold ·
+    national merit finalist ·
+    ut austin forty acres semifinalist
+  </p>
+  <details class="earlier">
+    <summary>4 more</summary>
+    <p class="prose-list">
+      <a href="https://meetings.aps.org/Meeting/TSF24/Session/FB01.7">aps fall 2024</a> presenter ·
+      <a href="https://www.southlakechamber.com/list/member/enrichify-9681">southlake chamber of commerce</a> ·
+      <a href="https://southlaketx.new.swagit.com/videos/313998">southlake city council</a> &amp;
+      <a href="https://carrollisdtx.new.swagit.com/videos/318164">carroll administrative board</a> honoree
+    </p>
+  </details>
 </section>
 
-<section>
-<h2>education</h2>
-<ul>
-  <li><a href="https://www.utexas.edu" class="plain">ut austin</a> — cs &amp; applied math.</li>
-  <li>carroll high school.</li>
-</ul>
-</section>
-
-<footer>
-<p>&copy; 2026 arjan suri · last touched 2026-08-27 · <span class="status">currently: <span id="status">debugging duckdb</span></span></p>
-</footer>
+</main>
 
 <script>
-  const states = [
-    "debugging duckdb",
-    "training a policy",
-    "writing latex",
-    "reading papers",
-    "shipping essos",
-    "drinking too much coffee",
-    "thinking about x402",
-    "in the lab",
-    "watching f1"
-  ];
-  document.getElementById("status").textContent = states[Math.floor(Math.random() * states.length)];
+  document.getElementById("date").textContent = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago", weekday: "long", month: "long", day: "numeric"
+  }).format(new Date()).toLowerCase();
 
   const title = "font: bold 16px Georgia; color: #000;";
   const body  = "font: 13px Georgia; color: #555;";
@@ -157,8 +250,6 @@
     }
   };
 </script>
-
-</div>
 
 </body>
 </html>
